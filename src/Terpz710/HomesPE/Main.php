@@ -15,8 +15,11 @@ use Terpz710\HomesPE\Command\HomesCommand;
 class Main extends PluginBase {
 
     public function onEnable(): void {
-        $this->saveDefaultConfig();
-        $config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+        if (!is_dir($this->getDataFolder() . "Homes")) {
+            @mkdir($this->getDataFolder() . "Homes");
+        }
+
+        $config = new Config($this->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "homes.json", Config::JSON);
 
         $this->getServer()->getCommandMap()->register("home", new HomeCommand($config, $this));
         $this->getServer()->getCommandMap()->register("homes", new HomesCommand($config, $this));
