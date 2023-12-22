@@ -6,12 +6,9 @@ namespace Terpz710\HomesPE\Command;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\plugin\Plugin;
-use pocketmine\plugin\PluginOwned;
 use pocketmine\player\Player;
+use pocketmine\plugin\Plugin;
 use pocketmine\utils\Config;
-
-use Terpz710\HomesPE\Main;
 
 class DelHomeCommand extends Command implements PluginOwned {
 
@@ -45,6 +42,10 @@ class DelHomeCommand extends Command implements PluginOwned {
 
                     $this->config->setNested("homespe.$playerName", $playerHomes);
                     $this->config->save();
+
+                    $playerConfig = new Config($this->plugin->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "$playerName.json", Config::JSON);
+                    $playerConfig->set("homes", $playerHomes);
+                    $playerConfig->save();
 
                     $sender->sendMessage("§l§eHome §c{$homeName}§e deleted");
                 } else {
