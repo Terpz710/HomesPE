@@ -2,28 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Terpz710\HomesPE;
+namespace Terpz710\HubPE;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 
-use Terpz710\HomesPE\Command\HomeCommand;
-use Terpz710\HomesPE\Command\SetHomeCommand;
-use Terpz710\HomesPE\Command\DelHomeCommand;
-use Terpz710\HomesPE\Command\HomesCommand;
+use Terpz710\HubPE\command\HubCommand;
+use Terpz710\HubPE\command\SetHubCommand;
+use Terpz710\HubPE\command\DeleteHubCommand;
 
 class Main extends PluginBase {
 
     public function onEnable(): void {
-        if (!is_dir($this->getDataFolder() . "Homes")) {
-            @mkdir($this->getDataFolder() . "Homes");
+        if (!is_dir($this->getDataFolder() . "Hub")) {
+            @mkdir($this->getDataFolder() . "Hub");
         }
 
-        $config = new Config($this->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "homes.json", Config::JSON);
+        $config = new Config($this->getDataFolder() . "Hub" . DIRECTORY_SEPARATOR . "hub-data.json", Config::JSON);
 
-        $this->getServer()->getCommandMap()->register("home", new HomeCommand($config, $this));
-        $this->getServer()->getCommandMap()->register("homes", new HomesCommand($config, $this));
-        $this->getServer()->getCommandMap()->register("delhome", new DelHomeCommand($config, $this));
-        $this->getServer()->getCommandMap()->register("sethome", new SetHomeCommand($config, $this));
+        $this->getServer()->getCommandMap()->register("hub", new HubCommand($config, $this));
+        $this->getServer()->getCommandMap()->register("sethub", new SetHubCommand($config, $this));
+        $this->getServer()->getCommandMap()->register("deletehub", new DeleteHubCommand($config, $this));
     }
 }
