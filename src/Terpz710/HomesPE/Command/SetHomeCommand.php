@@ -6,16 +6,11 @@ namespace Terpz710\HomesPE\Command;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\plugin\Plugin;
-use pocketmine\plugin\PluginBase;
-use pocketmine\plugin\PluginOwned;
 use pocketmine\player\Player;
+use pocketmine\plugin\Plugin;
 use pocketmine\utils\Config;
-use pocketmine\math\Vector3;
 
-use Terpz710\HomesPE\Main;
-
-class SetHomeCommand extends Command implements PluginOwned {
+class SetHomeCommand extends Command {
 
     /** @var Config */
     private $config;
@@ -28,10 +23,6 @@ class SetHomeCommand extends Command implements PluginOwned {
         $this->config = $config;
         $this->plugin = $plugin;
         $this->setPermission("homespe.sethome");
-    }
-
-    public function getOwningPlugin(): Plugin {
-        return $this->plugin;
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
@@ -51,7 +42,7 @@ class SetHomeCommand extends Command implements PluginOwned {
                         "z" => $position->getZ(),
                         "world" => $world,
                     ];
-                    $message = "§l§aHome location §e{$homeName}§a updated";
+                    $message = "§l§aHome location §e{$homeName}§a updated";
                 } else {
                     $playerHomes[$homeName] = [
                         "x" => $position->getX(),
@@ -59,19 +50,20 @@ class SetHomeCommand extends Command implements PluginOwned {
                         "z" => $position->getZ(),
                         "world" => $world,
                     ];
-                    $message = "§l§aHome location §e{$homeName}§a set";
+                    $message = "§l§aHome location §e{$homeName}§a set";
                 }
 
-                $this->config->setNested("homes.$playerName", $playerHomes);
+                $this->config->setNested("homespe.$playerName", $playerHomes);
                 $this->config->save();
 
                 $sender->sendMessage($message);
             } else {
-                $sender->sendMessage("§l§cYou don't have permission to use this command");
+                $sender->sendMessage("§c§lYou don't have permission to use this command");
             }
         } else {
             $sender->sendMessage("This command can only be used by players.");
         }
+
         return true;
     }
 }
