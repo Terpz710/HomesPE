@@ -22,9 +22,9 @@ class Main extends PluginBase {
     }
 
     private function registerCommands(): void {
-        $this->getServer()->getCommandMap()->register("home", new HomeCommand($this));
-        $this->getServer()->getCommandMap()->register("homes", new HomesCommand($this));
-        $this->getServer()->getCommandMap()->register("delhome", new DelHomeCommand($this));
-        $this->getServer()->getCommandMap()->register("sethome", new SetHomeCommand($this));
+        $this->getServer()->getCommandMap()->register("home", new HomeCommand($this->getConfig(), $this));
+        $this->getServer()->getCommandMap()->register("homes", new HomesCommand($this->getConfig(), $this));
+        $this->getServer()->getCommandMap()->register("delhome", new DelHomeCommand($this->getConfig(), $this));
+        $this->getServer()->getCommandMap()->register("sethome", new SetHomeCommand($this->getConfig(), $this));
     }
 }
