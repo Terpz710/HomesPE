@@ -13,13 +13,10 @@ use pocketmine\world\Position;
 
 class HomeCommand extends Command {
 
-    /** @var Config */
-    private $config;
-
     /** @var Plugin */
     private $plugin;
 
-    public function __construct(Config $config, Plugin $plugin) {
+    public function __construct(Plugin $plugin) {
         parent::__construct(
             "home",
             "Teleport to home",
@@ -27,7 +24,6 @@ class HomeCommand extends Command {
             ["homes", "myhomes"]
         );
         $this->setPermission("homespe.home");
-        $this->config = $config;
         $this->plugin = $plugin;
     }
 
@@ -35,7 +31,9 @@ class HomeCommand extends Command {
         if ($sender instanceof Player) {
             if ($sender->hasPermission("homespe.home")) {
                 $playerName = $sender->getName();
-                $playerHomes = $this->config->getNested("homespe.$playerName", []);
+                $playerConfig = new Config($this->plugin->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "$playerName.json", Config::JSON);
+
+                $playerHomes = $playerConfig->get("homes", []);
 
                 if (empty($playerHomes)) {
                     $sender->sendMessage("§c§lYou haven't set any homes. Use §e/sethome [HomeName]§c to set a home");
