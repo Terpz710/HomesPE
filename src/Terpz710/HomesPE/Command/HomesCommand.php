@@ -36,6 +36,7 @@ class HomesCommand extends Command {
                 } else {
                     $homeList = implode("§f,§a ", array_keys($playerHomes));
                     $sender->sendMessage("§l§aYour homes§f:§a {$homeList}");
+                    $sender->sendMessage("§eUse §l§a/home [home]§e to teleport to a specific home.");
                 }
             } else {
                 $sender->sendMessage("§c§lYou don't have permission to use this command");
