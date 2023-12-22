@@ -12,15 +12,11 @@ use pocketmine\utils\Config;
 
 class HomesCommand extends Command {
 
-    /** @var Config */
-    private $config;
-
     /** @var Plugin */
     private $plugin;
 
-    public function __construct(Config $config, Plugin $plugin) {
+    public function __construct(Plugin $plugin) {
         parent::__construct("homes", "List your homes", "/homes", ["listhomes"]);
-        $this->config = $config;
         $this->plugin = $plugin;
         $this->setPermission("homespe.homes");
     }
@@ -29,7 +25,9 @@ class HomesCommand extends Command {
         if ($sender instanceof Player) {
             if ($sender->hasPermission("homespe.homes")) {
                 $playerName = $sender->getName();
-                $playerHomes = $this->config->getNested("homespe.$playerName", []);
+                $playerConfig = new Config($this->plugin->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "$playerName.json", Config::JSON);
+
+                $playerHomes = $playerConfig->get("homes", []);
 
                 if (empty($playerHomes)) {
                     $sender->sendMessage("§c§lYou haven't set any homes. Use §e/sethome [HomeName]§c to set a home");
