@@ -8,26 +8,17 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
-use pocketmine\plugin\PluginOwned;
 use pocketmine\utils\Config;
 
-class DelHomeCommand extends Command implements PluginOwned {
-
-    /** @var Config */
-    private $config;
+class DelHomeCommand extends Command {
 
     /** @var Plugin */
     private $plugin;
 
-    public function __construct(Config $config, Plugin $plugin) {
+    public function __construct(Plugin $plugin) {
         parent::__construct("deletehome", "Delete a home", null, ["delhome"]);
-        $this->config = $config;
         $this->plugin = $plugin;
         $this->setPermission("homespe.delhome");
-    }
-
-    public function getOwningPlugin(): Plugin {
-        return $this->plugin;
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
@@ -36,15 +27,13 @@ class DelHomeCommand extends Command implements PluginOwned {
                 $homeName = strtolower($args[0] ?? "default");
                 $playerName = $sender->getName();
 
-                $playerHomes = $this->config->getNested("homespe.$playerName", []);
+                $playerConfig = new Config($this->plugin->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "$playerName.json", Config::JSON);
+
+                $playerHomes = $playerConfig->get("homes", []);
 
                 if (isset($playerHomes[$homeName])) {
                     unset($playerHomes[$homeName]);
 
-                    $this->config->setNested("homespe.$playerName", $playerHomes);
-                    $this->config->save();
-
-                    $playerConfig = new Config($this->plugin->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "$playerName.json", Config::JSON);
                     $playerConfig->set("homes", $playerHomes);
                     $playerConfig->save();
 
