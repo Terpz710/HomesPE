@@ -12,15 +12,11 @@ use pocketmine\utils\Config;
 
 class SetHomeCommand extends Command {
 
-    /** @var Config */
-    private $config;
-
     /** @var Plugin */
     private $plugin;
 
-    public function __construct(Config $config, Plugin $plugin) {
+    public function __construct(Plugin $plugin) {
         parent::__construct("sethome", "Set a home location", null, ["setlobby", "setspawn"]);
-        $this->config = $config;
         $this->plugin = $plugin;
         $this->setPermission("homespe.sethome");
     }
@@ -33,7 +29,9 @@ class SetHomeCommand extends Command {
                 $world = $position->getWorld()->getFolderName();
 
                 $playerName = $sender->getName();
-                $playerHomes = $this->config->getNested("homespe.$playerName", []);
+                $playerConfig = new Config($this->plugin->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "$playerName.json", Config::JSON);
+
+                $playerHomes = $playerConfig->get("homes", []);
 
                 if (isset($playerHomes[$homeName])) {
                     $playerHomes[$homeName] = [
@@ -52,8 +50,7 @@ class SetHomeCommand extends Command {
                     ];
                     $message = "§l§aHome location §e{$homeName}§a set";
                 }
-                // Create a separate JSON file for each player
-                $playerConfig = new Config($this->plugin->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "$playerName.json", Config::JSON);
+
                 $playerConfig->set("homes", $playerHomes);
                 $playerConfig->save();
 
