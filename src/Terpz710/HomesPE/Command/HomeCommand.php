@@ -8,18 +8,15 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
-use pocketmine\plugin\PluginOwned;
 use pocketmine\utils\Config;
 use pocketmine\world\Position;
 
-use Terpz710\HomesPE\Main;
-
-class HomeCommand extends Command implements PluginOwned {
+class HomeCommand extends Command {
 
     /** @var Config */
     private $config;
 
-    /** @var Main */
+    /** @var Plugin */
     private $plugin;
 
     public function __construct(Config $config, Plugin $plugin) {
@@ -32,10 +29,6 @@ class HomeCommand extends Command implements PluginOwned {
         $this->setPermission("homespe.home");
         $this->config = $config;
         $this->plugin = $plugin;
-    }
-
-    public function getOwningPlugin(): Plugin {
-        return $this->plugin;
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
@@ -52,6 +45,7 @@ class HomeCommand extends Command implements PluginOwned {
                 if (empty($args)) {
                     $homeList = implode("§f,§a ", array_keys($playerHomes));
                     $sender->sendMessage("§l§aYour homes§f:§a {$homeList}");
+                    $sender->sendMessage("§eUse §l§a/home [home]§e to teleport to a specific home.");
                     return true;
                 }
 
@@ -74,7 +68,7 @@ class HomeCommand extends Command implements PluginOwned {
                         return false;
                     }
 
-                    $position = new Position($x, $y, $z, $world); // Use Position instead of Vector3
+                    $position = new Position($x, $y, $z, $world);
                     $sender->teleport($position);
                     $sender->sendMessage("§l§aTeleported to home §e{$homeName}");
                 } else {
