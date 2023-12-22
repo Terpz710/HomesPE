@@ -8,7 +8,6 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
-use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\utils\Config;
 use pocketmine\world\Position;
@@ -23,7 +22,7 @@ class HomeCommand extends Command implements PluginOwned {
     /** @var Main */
     private $plugin;
 
-    public function __construct(Config $config, Main $plugin) {
+    public function __construct(Config $config, Plugin $plugin) {
         parent::__construct(
             "home",
             "Teleport to home",
@@ -46,13 +45,13 @@ class HomeCommand extends Command implements PluginOwned {
                 $playerHomes = $this->config->getNested("homespe.$playerName", []);
 
                 if (empty($playerHomes)) {
-                    $sender->sendMessage("§c§lYou haven't set any homes. Use §e/sethome [HomeName]§c to set a home");
+                    $sender->sendMessage("§c§lYou haven't set any homes. Use §e/sethome [HomeName]§c to set a home");
                     return true;
                 }
 
                 if (empty($args)) {
                     $homeList = implode("§f,§a ", array_keys($playerHomes));
-                    $sender->sendMessage("§l§aYour homes§f:§a {$homeList}");
+                    $sender->sendMessage("§l§aYour homes§f:§a {$homeList}");
                     return true;
                 }
 
@@ -75,18 +74,19 @@ class HomeCommand extends Command implements PluginOwned {
                         return false;
                     }
 
-                    $position = new Position($x, $y, $z, $world);
+                    $position = new Position($x, $y, $z, $world); // Use Position instead of Vector3
                     $sender->teleport($position);
-                    $sender->sendMessage("§l§aTeleported to home §e{$homeName}");
+                    $sender->sendMessage("§l§aTeleported to home §e{$homeName}");
                 } else {
-                    $sender->sendMessage("§c§lHome §e{$homeName}§c not found. Use §e/home§c to see your available homes");
+                    $sender->sendMessage("§c§lHome §e{$homeName}§c not found. Use §e/home§c to see your available homes");
                 }
             } else {
-                $sender->sendMessage("§c§lYou don't have permission to use this command");
+                $sender->sendMessage("§c§lYou don't have permission to use this command");
             }
         } else {
             $sender->sendMessage("This command can only be used by players.");
         }
+
         return true;
     }
 }
