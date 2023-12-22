@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Terpz710\HomesPE;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\utils\Config;
 
 use Terpz710\HomesPE\Command\HomeCommand;
 use Terpz710\HomesPE\Command\SetHomeCommand;
@@ -19,11 +18,13 @@ class Main extends PluginBase {
             @mkdir($this->getDataFolder() . "Homes");
         }
 
-        $config = new Config($this->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "homes.json", Config::JSON);
+        $this->registerCommands();
+    }
 
-        $this->getServer()->getCommandMap()->register("home", new HomeCommand($config, $this));
-        $this->getServer()->getCommandMap()->register("homes", new HomesCommand($config, $this));
-        $this->getServer()->getCommandMap()->register("delhome", new DelHomeCommand($config, $this));
-        $this->getServer()->getCommandMap()->register("sethome", new SetHomeCommand($config, $this));
+    private function registerCommands(): void {
+        $this->getServer()->getCommandMap()->register("home", new HomeCommand($this));
+        $this->getServer()->getCommandMap()->register("homes", new HomesCommand($this));
+        $this->getServer()->getCommandMap()->register("delhome", new DelHomeCommand($this));
+        $this->getServer()->getCommandMap()->register("sethome", new SetHomeCommand($this));
     }
 }
