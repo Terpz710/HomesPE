@@ -52,10 +52,6 @@ class SetHomeCommand extends Command {
                     ];
                     $message = "§l§aHome location §e{$homeName}§a set";
                 }
-
-                $this->config->setNested("homespe.$playerName", $playerHomes);
-                $this->config->save();
-
                 // Create a separate JSON file for each player
                 $playerConfig = new Config($this->plugin->getDataFolder() . "Homes" . DIRECTORY_SEPARATOR . "$playerName.json", Config::JSON);
                 $playerConfig->set("homes", $playerHomes);
